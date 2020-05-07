@@ -1,6 +1,7 @@
 package Components;
 
 import Components.Memory;
+import Processor.Processor;
 
 public class Cache {
     static boolean[] Valid_bit =new boolean [1536]; //by default false
@@ -10,7 +11,7 @@ public class Cache {
     static int []cache = new int [1536];
     //  static  Memory mem = new Memory();
     // static HashMap< Integer, String>hashMap= new HashMap<>();
-    static  String memory[]=Memory.Mem;
+    //static  String memory[]=Memory.Mem;
 
 
 
@@ -30,7 +31,7 @@ public class Cache {
         else{
             //mis
             cache[Index]=Tag;
-            Data[Index]=memory[address];
+            Data[Index]= Processor.m.readDataMemory(address);
             Valid_bit[Index]=true ;
             System.out.println("miss");
         }

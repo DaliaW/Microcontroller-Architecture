@@ -2,6 +2,7 @@ package Stages;
 
 import Components.Register;
 import Components.RegisterFile;
+import Processor.Processor;
 
 import java.util.ArrayList;
 
@@ -9,9 +10,6 @@ import static Processor.Processor.*;
 
 public class InstructionDecode {
     public static String output,rs,rt,rd;
-
-    static Register ReadData1;
-    static Register ReadData2;
     public static String funct;
     public static String opCode;
     public static ArrayList<String> a;
@@ -29,37 +27,38 @@ public class InstructionDecode {
     public static void InstDecode(String instruction){
         // System.out.println(s);
         a = new ArrayList<String>();
-        opCode = instruction.substring(0,6);
+        opCode = instruction.substring(0,4);
         //ContUnit(opCode);
-        rs = instruction.substring(6,11);
-        rt = instruction.substring(11,16);
+        rs = instruction.substring(4,7);
+        rt = instruction.substring(7,10);
         a.add(opCode);
         a.add(rs);
         a.add(rt);
-        a.add(instruction.substring(16,32));
+        a.add(instruction.substring(10,16));
         //System.out.println("my instruction");       System.out.println(a.toString());
         String Type = "";
 
 
-        funct = instruction.substring(26,32);
-        System.out.println("Decoding .......................................................... ");
+        funct = instruction.substring(13,16);
+        System.out.println("############################## decoding ########################### ");
+        System.out.println("..................................................................");
 
-        if(opCode.equals("000000")){
+        if(opCode.equals("0000")){
             //R Type
-            rd = instruction.substring(16,21);
+            rd = instruction.substring(10,13);
 
 
 
             //System.out.println("rs "+ReadData1+"rt "+ReadData2);
 
             Type = getType(rd);
-            if(!rd.equals("000000")){
+            if(!rd.equals("000")){
                 //////
-                ReadData1 = RegisterFile.readRegister(Integer.parseInt(rs,2));
-                ReadData2 = RegisterFile.readRegister(Integer.parseInt(rt,2));
+                Processor.ReadData1 = Processor.registerFile.readRegister(Integer.parseInt(rs,2));
+                Processor.ReadData2 = Processor.registerFile.readRegister(Integer.parseInt(rt,2));
 
                 output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|rd:"
-                        +rd+"|0 "+"|funct:"+funct;
+                        +rd+"|funct:"+funct;
                 System.out.println("Type of Register: "+Type);
                 System.out.println(output);
                 //System.out.println("RegWrite: "+ RegWrite +"\n"+"RegDst: "+RegDst);
@@ -69,12 +68,12 @@ public class InstructionDecode {
                 //System.out.println("RegWrite: "+RegWrite);
             }
 
-        }else if(opCode.equals("000010")){//J type (jump)
+        }else if(opCode.equals("0010")){//J type (jump)
             //RegWrite = false;
             output = "opCode:" + opCode + "|immediate: "+a.get(1)+""+a.get(2);
             System.out.println(output);
 
-        }else if(opCode.equals("100011")){//I type (lw,sw)
+        }else if(opCode.equals("1001")){//I type (lw,sw)
             //RegWrite = true;
             //System.out.println("RegWrite: "+RegWrite);
             output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|immediate "
@@ -82,7 +81,7 @@ public class InstructionDecode {
             System.out.println(output);
 
 
-        }else if(opCode.equals("000100")){//(BEQ) branch
+        }else if(opCode.equals("1100")){//(BEQ) branch
             output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|immediate "
                     +a.get(3);
             System.out.println(output);
@@ -91,7 +90,9 @@ public class InstructionDecode {
         }
         ContUnit(opCode);
         //RegWrite = false;
-        System.out.println("finished decoding ................................................. ");
+
+        System.out.println("########################### finished decoding ########################### ");
+        System.out.println("..........................................................................");
 
     }
 
@@ -101,31 +102,31 @@ public class InstructionDecode {
     to the ALU Control.
      */
     public static void ContUnit(String opCode){
-        if(opCode.equals("000000")){ //R type
+        if(opCode.equals("0000")){ //R type
             RegWrite = 1;
             RegDst = 1;
             ALUOp = "10";
             System.out.println("WB controls: MemToReg: "+MemToReg+" ,RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+" ,MemWrite: "+MemWrite+" ,Branch: "+Branch+"\n" +
-                    "EX controls: RegDest: "+RegDst+" ,ALUOp: "+ALUOp+" ,ALUSrc: "+ALUSrc);
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" +
+                    "EX controls: RegDest: "+RegDst+", ALUOp: "+ALUOp+", ALUSrc: "+ALUSrc);
         }
-        else if(opCode.equals("100011")){ //lw/sw
+        else if(opCode.equals("1001")){ //lw/sw
             RegWrite = 1;
             MemRead = 1;
-            System.out.println("WB controls: MemToReg: "+MemToReg+" ,RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+" ,MemWrite: "+MemWrite+" ,Branch: "+Branch+"\n" );
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
 
         }
-        else if(opCode.equals("000100")){ //BEQ
+        else if(opCode.equals("1100")){ //BEQ
             ALUOp ="01";
-            System.out.println("WB controls: MemToReg: "+"Don't care"+" ,RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+" ,MemWrite: "+MemWrite+" ,Branch: "+Branch+"\n" );
+            System.out.println("WB controls: MemToReg: "+"Don't care"+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
 
 
         }
         else {// J type
             System.out.println("WB controls: MemToReg: "+MemToReg+" RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+" MemWrite: "+MemWrite+" Branch: "+Branch+"\n");
+                    "MEM controls: MemRead: "+MemRead+" , MemWrite: "+MemWrite+", Branch: "+Branch+"\n");
         }
         ALUControl();
         System.out.println("ALU OPERATION: "+ALUOperation);
@@ -171,20 +172,29 @@ public class InstructionDecode {
             PCSrc = pc.getPc()+4;
         }
         else if(ALUOp.equals("10")){ //R-type instruction
-            if(funct.equals("100000")){
+            if(funct.equals("000")){
                 ALUOperation = "0010"; //ADD
             }
-            else if(funct.equals("100010")) {
+            else if(funct.equals("001")) {
                 ALUOperation = "0110"; //SUB
             }
-            else if(funct.equals("100100")) {
+            else if(funct.equals("010")) {
                 ALUOperation = "0000"; //AND
             }
-            else if(funct.equals("100101")) {
+            else if(funct.equals("011")) {
                 ALUOperation = "0001"; //OR
             }
-            else if(funct.equals("101010")) {
+            else if(funct.equals("110")) {
                 ALUOperation = "0111";  //SLT
+            }
+            else if (funct.equals("111")){ //MULT
+                ALUOperation = "0010";
+            }
+            else if (funct.equals("101")){ //SRL
+                ALUOperation = "0110";
+            }
+            else if (funct.equals("100")){ //SLL
+                ALUOperation = "0101";
             }
         }
 

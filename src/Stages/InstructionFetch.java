@@ -7,9 +7,10 @@ public class InstructionFetch {
     public static String Instruction;
 
     public static void InstFetch(int i) {
-        Instruction = Processor.c.readcashe(Processor.pc.getPc());
+        Instruction = Processor.c.readcashe(i);
         System.out.println("Instruction Fetched: "+Instruction);
         System.out.println("Next PC: "+ProgCount());
+
     }
 
     /*

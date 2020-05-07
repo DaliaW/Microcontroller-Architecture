@@ -18,33 +18,53 @@ public class Execute {
      – Outputs: ALUresult (32-bits) , ZeroFlag (1-bit), BranchAddressResult (32-bits), Read-
        Data2 (32-bits), PC incremented by 4. (32-bits).*/
     public static void Execute(String ALUOp, int ALUSrc, int ReadData1, int ReadData2, int pc) {
-        System.out.println("EXECUTING............................................");
-        if(ALUOp.equals("01")){ //BEQ
-            if(ReadData1 == ReadData2){
+        System.out.println("..........................................................................");
+
+        System.out.println("########################### EXECUTING ########################### ");
+        System.out.println("..........................................................................");
+
+        if(ALUOp.equals("01")){ //Branch
+            if(ReadData1 != ReadData2){ //BNEQ
                 pc  = InstructionFetch.ProgCount() + Integer.parseInt(a.get(3)) << 2;
 
-            }else{ //they're not equal then Ignore and increment pc by 4
+            }else if(ReadData1 > ReadData2){ //Branch on greater than
+                pc  = InstructionFetch.ProgCount() + Integer.parseInt(a.get(3)) << 2;
+
+            }
+            else{ //they're equal then Ignore and increment pc by 4
                 InstructionFetch.ProgCount();
             }
-            System.out.println("FINISHED EXECUTING..............................................");
+
+
+            System.out.println("########################### FINISHED EXECUTING ###########################");
+            System.out.println("..........................................................................");
+
         }
         else if(ALUOp.equals("00")){
             Processor.MemWrite = 1;
-            System.out.println("FINISHED EXECUTING..............................................");
+
+
+            System.out.println("########################### FINISHED EXECUTING ########################### ");
+            System.out.println("..........................................................................");
+
         }
         else if (ALUOp.equals("10")) {
             //funct
             ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
             } else
-                System.out.println("invalid operator");
+            System.out.println("invalid operator");
+//
+//            System.out.println("Operation Name: "+ operation+"\n"
+//                    +"ReadData1: "+ReadData1+"\n"+"ReadData2: "+ReadData2+"\n"
+//                    +"Output: "+r+"\n"+"Z-Flag Value: "+flagZero+" ,PC: "+Processor.pc);
 
-            System.out.println("Operation Name: "+ operation+"\n"
-                    +"ReadData1: "+ReadData1+"\n"+"ReadData2: "+ReadData2+"\n"
-                    +"Output: "+r+"\n"+"Z-Flag Value: "+flagZero+" ,PC: "+Processor.pc);
 
-            System.out.println("FINISHED EXECUTING..............................................");
+        System.out.println("########################### FINISHED EXECUTING ########################### ");
+        System.out.println("..........................................................................");
 
-        }
+
+
+    }
 
 
 

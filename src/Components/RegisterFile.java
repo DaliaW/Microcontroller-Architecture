@@ -10,14 +10,15 @@ public class RegisterFile {
 
         for(int i = 0; i < size; i++) {
             registers[i] = new Register();
+            registers[i].setData(i);
             registers[i].setRegister(i,""+i);
         }
     }
 
-    public static Register readRegister(int index)
+    public static int readRegister(int index)
     {
         registers[index].read=true;
-        return registers[index];
+        return registers[index].getdata();
 
     }
 
@@ -38,7 +39,7 @@ public class RegisterFile {
     {
         String r = "";
         for(int i = 0; i < 16; i++)
-            r += registers[i].ToString() + ",";
+            r += "[" + registers[i].ToString()  +"]";
         return r;
     }
 

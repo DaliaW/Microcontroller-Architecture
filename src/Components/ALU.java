@@ -1,13 +1,14 @@
 package Components;
 public class ALU {
     public static int flagZero = 0;
-    public static String operation;
+    public static String operationBIN;
+    public static String Name;
     int o1;
     int o2;
     public static int r ;
 
     public ALU(String operation,int o1,int o2) {
-        this.operation=operation;
+        operationBIN=operation;
         this.o1=o1;
         this.o2=o2;
     }
@@ -15,60 +16,70 @@ public class ALU {
     public static void ALUEvaluator1( String operation,int o1,int o2) {
 
         if(operation.equals("0000")) {   //Add
-
+            Name = "Add";
             r=addOp(o1,o2);
             if (r==0)
                 flagZero=1;
         }
 
         else if(operation.equals("0001")) {   //sub
+            Name = "SUB";
             r=subOp (o1,o2);
             if (r==0)
                 flagZero=1;
         }
         else if(operation.equals("0010")) {  //mult
+            Name = "MULT";
             r=multOp(o1,o2);
             if (r==0) {
                 flagZero=1;
             }
         }
         else  if(operation.equals("0011")) {   //AND
+            Name = "AND";
             r=ANDOp(o1,o2);
             if (r==0) {
                 flagZero=1;
             }
         }
         else if(operation.equals("0100")) {   //OR
+            Name = "OR";
             r=OROp(o1,o2);
             if (r==0) {
                 flagZero=1;
             }
         }
         else if(operation.equals("0101")) {   //SLL
+            Name = "SLL";
             r=sllOp(o1,o2);
             if (r==0)
                 flagZero=1;
         }
         else if(operation.equals("0110")) {   //SRL
+            Name = "SRL";
             r=srlOp(o1,o2);
             if (r==0)
                 flagZero=1;
         }
-        else if(operation.equals("0111")) {   //SLT
+        else if(operation.equals("0111")) {
+            //SLT
+            Name = "SLT";
             r=sltOp(o1,o2);
             if (r==0)
                 flagZero=1;
         }
         else {
+            Name = "invalid operation !";
             System.out.println("operation not available");
         }
         String o1Bin = Integer.toBinaryString(o1);
         String o2Bin = Integer.toBinaryString(o2);
         String res = Integer.toBinaryString(r);
 
-        System.out.println("Operation Name: "+operation+"\n"
-                +"ReadData1: "+o1Bin+"\n"+"ReadData2: "+o2Bin+"\n"
-                +"Output: "+res+"\n"+"Z-Flag Value: "+flagZero);
+        System.out.println("Operation Name: "+Name+"\n"
+                +"ReadData1 in BIN: "+o1Bin+" ,ReadData1 in DEC: "+o1+"\n"
+                +"ReadData2 in BIN: "+o2Bin+" ,ReadData2 in DEC: "+o2+"\n"
+                +"ALUResult: "+res+"\n"+"Z-Flag Value: "+flagZero);
 
     }
 
