@@ -13,50 +13,27 @@ public class WriteBack {
     //MemToReg (1bit), RegDst (1-bit).
     //– Outputs: WriteData (32-bits).
 
-    public static ArrayList<String> WriteBack(String ALUresult,String ReadData,int RegWrite, String MemToReg, String RegDst, RegisterFile r ) {
-        System.out.println("############################ Write Back ################################");
-
+    public static ArrayList<String> WriteBack(String ALUresult,String ReadData,int RegWrite, int MemToReg, int RegDst, RegisterFile r ) {
+        System.out.println("**************************** Write Back ****************************");
         ArrayList<String> arrli = new ArrayList<String>();
+
+        if(MemToReg == 1 && RegDst == 1){
+
         String   WriteData = "";
         int AluResInt=Integer.parseInt(ALUresult);
         int readdataint=Integer.parseInt(ReadData);
-
-        if(MemToReg.equals("0")) {  //Value of register Write Data is from ALU
-
-            WriteData=ALUresult;
-            if(RegDst.equals("0")) {  //Destination register comes from rt ﬁeld.
-                int regDst = Integer.parseInt(InstructionDecode.rd,2);
-                RegisterFile.writeRegister(regDst, ALU.r +"");
-
-            }
-            if(RegDst.equals("1")) {	  // Destination register comes from the rd ﬁeld.
-                int regDst = Integer.parseInt(InstructionDecode.rd,2);
-                RegisterFile.writeRegister(regDst, ALU.r +"");
-            }
-
-        }
-        if(MemToReg.equals("1")) {   //Value of register Write Data is memory Read Data.
-
-            WriteData=ReadData;
-            if(RegDst.equals("0")) {  //Destination register comes from rt ﬁeld.
-                int regDst = Integer.parseInt(InstructionDecode.rd,2);
-                RegisterFile.writeRegister(regDst, ALU.r +"");
-            }
-            if(RegDst.equals("1")) {	// Destination register comes from the rd ﬁeld.
-                int regDst = Integer.parseInt(InstructionDecode.rd);
-                RegisterFile.writeRegister(regDst, ALU.r +"");
-            }
-        }
+        WriteData=ALUresult;
 
         int regDst = Integer.parseInt(InstructionDecode.rd);
+        RegisterFile.writeRegister(regDst, WriteData);
 
-        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+regDst);
-        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+InstructionDecode.rd);
+//        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+regDst);
+//        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+InstructionDecode.rd);
+//        String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
+        System.out.println("WRITE DATA: "+String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst)))));
 
-        System.out.println("WRITE DATA: "+RegisterFile.readRegister(regDst));
-
-        arrli.add(WriteData);
-        System.out.println("############################ finished Write Back ################################");
+        arrli.add(WriteData);}
+        System.out.println("**************************** finished Write Back ****************************");
 
         return arrli;
     }

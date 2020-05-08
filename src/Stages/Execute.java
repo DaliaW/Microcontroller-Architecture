@@ -18,9 +18,8 @@ public class Execute {
      – Outputs: ALUresult (32-bits) , ZeroFlag (1-bit), BranchAddressResult (32-bits), Read-
        Data2 (32-bits), PC incremented by 4. (32-bits).*/
     public static void Execute(String ALUOp, int ALUSrc, int ReadData1, int ReadData2, int pc) {
-        System.out.println("..........................................................................");
 
-        System.out.println("########################### EXECUTING ########################### ");
+        System.out.println("**************************** executing ****************************");
         System.out.println("..........................................................................");
 
         if(ALUOp.equals("01")){ //Branch
@@ -36,7 +35,7 @@ public class Execute {
             }
 
 
-            System.out.println("########################### FINISHED EXECUTING ###########################");
+            System.out.println("**************************** finished executing ****************************");
             System.out.println("..........................................................................");
 
         }
@@ -44,7 +43,7 @@ public class Execute {
             Processor.MemWrite = 1;
 
 
-            System.out.println("########################### FINISHED EXECUTING ########################### ");
+            System.out.println("**************************** finished executing ****************************");
             System.out.println("..........................................................................");
 
         }
@@ -59,7 +58,7 @@ public class Execute {
 //                    +"Output: "+r+"\n"+"Z-Flag Value: "+flagZero+" ,PC: "+Processor.pc);
 
 
-        System.out.println("########################### FINISHED EXECUTING ########################### ");
+        System.out.println("**************************** finished executing ****************************");
         System.out.println("..........................................................................");
 
 

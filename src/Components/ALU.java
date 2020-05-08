@@ -15,14 +15,14 @@ public class ALU {
 
     public static void ALUEvaluator1( String operation,int o1,int o2) {
 
-        if(operation.equals("0000")) {   //Add
+        if(operation.equals("0011")) {   //Add
             Name = "Add";
             r=addOp(o1,o2);
             if (r==0)
                 flagZero=1;
         }
 
-        else if(operation.equals("0001")) {   //sub
+        else if(operation.equals("0110")) {   //sub
             Name = "SUB";
             r=subOp (o1,o2);
             if (r==0)
@@ -35,14 +35,14 @@ public class ALU {
                 flagZero=1;
             }
         }
-        else  if(operation.equals("0011")) {   //AND
+        else  if(operation.equals("0000")) {   //AND
             Name = "AND";
             r=ANDOp(o1,o2);
             if (r==0) {
                 flagZero=1;
             }
         }
-        else if(operation.equals("0100")) {   //OR
+        else if(operation.equals("0001")) {   //OR
             Name = "OR";
             r=OROp(o1,o2);
             if (r==0) {
@@ -55,7 +55,7 @@ public class ALU {
             if (r==0)
                 flagZero=1;
         }
-        else if(operation.equals("0110")) {   //SRL
+        else if(operation.equals("1110")) {   //SRL
             Name = "SRL";
             r=srlOp(o1,o2);
             if (r==0)
@@ -75,10 +75,11 @@ public class ALU {
         String o1Bin = Integer.toBinaryString(o1);
         String o2Bin = Integer.toBinaryString(o2);
         String res = Integer.toBinaryString(r);
+//        String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
 
         System.out.println("Operation Name: "+Name+"\n"
-                +"ReadData1 in BIN: "+o1Bin+" ,ReadData1 in DEC: "+o1+"\n"
-                +"ReadData2 in BIN: "+o2Bin+" ,ReadData2 in DEC: "+o2+"\n"
+                +"ReadData1 in BIN: "+String.format("%016d", Integer.parseInt(o1Bin))+" ,ReadData1 in DEC: "+o1+"\n"
+                +"ReadData2 in BIN: "+String.format("%016d", Integer.parseInt(o2Bin))+" ,ReadData2 in DEC: "+o2+"\n"
                 +"ALUResult: "+res+"\n"+"Z-Flag Value: "+flagZero);
 
     }

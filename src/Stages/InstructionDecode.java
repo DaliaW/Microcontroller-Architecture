@@ -40,7 +40,7 @@ public class InstructionDecode {
 
 
         funct = instruction.substring(13,16);
-        System.out.println("############################## decoding ########################### ");
+        System.out.println("**************************** decoding ****************************");
         System.out.println("..................................................................");
 
         if(opCode.equals("0000")){
@@ -88,10 +88,10 @@ public class InstructionDecode {
 
 
         }
-        ContUnit(opCode);
+        ControlUnit(opCode);
         //RegWrite = false;
 
-        System.out.println("########################### finished decoding ########################### ");
+        System.out.println("*************************** finished decoding ****************************");
         System.out.println("..........................................................................");
 
     }
@@ -101,24 +101,26 @@ public class InstructionDecode {
     changes the control signals according to the provided table outputs all 8 control unit signals
     to the ALU Control.
      */
-    public static void ContUnit(String opCode){
+    public static void ControlUnit(String opCode){
         if(opCode.equals("0000")){ //R type
             RegWrite = 1;
             RegDst = 1;
+            MemToReg = 1;
             ALUOp = "10";
             System.out.println("WB controls: MemToReg: "+MemToReg+" ,RegWrite: "+RegWrite+"\n" +
                     "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" +
                     "EX controls: RegDest: "+RegDst+", ALUOp: "+ALUOp+", ALUSrc: "+ALUSrc);
         }
-        else if(opCode.equals("1001")){ //lw/sw
+        else if(opCode.equals("1001")){ //I-type
             RegWrite = 1;
             MemRead = 1;
             System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
                     "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
 
         }
-        else if(opCode.equals("1100")){ //BEQ
+        else if(opCode.equals("1100")){ //Conditional Branch
             ALUOp ="01";
+            Branch = 1;
             System.out.println("WB controls: MemToReg: "+"Don't care"+", RegWrite: "+RegWrite+"\n" +
                     "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
 
@@ -173,7 +175,7 @@ public class InstructionDecode {
         }
         else if(ALUOp.equals("10")){ //R-type instruction
             if(funct.equals("000")){
-                ALUOperation = "0010"; //ADD
+                ALUOperation = "0011"; //ADD
             }
             else if(funct.equals("001")) {
                 ALUOperation = "0110"; //SUB
@@ -191,7 +193,7 @@ public class InstructionDecode {
                 ALUOperation = "0010";
             }
             else if (funct.equals("101")){ //SRL
-                ALUOperation = "0110";
+                ALUOperation = "1110";
             }
             else if (funct.equals("100")){ //SLL
                 ALUOperation = "0101";

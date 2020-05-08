@@ -9,8 +9,7 @@ public class InstructionFetch {
     public static void InstFetch(int i) {
         Instruction = Processor.c.readcashe(i);
         System.out.println("Instruction Fetched: "+Instruction);
-        System.out.println("Next PC: "+ProgCount());
-
+        System.out.println("Next PC: "+String.format("%016d", Integer.parseInt(Integer.toBinaryString(Processor.pc.getPc()+4))));
     }
 
     /*

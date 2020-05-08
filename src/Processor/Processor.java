@@ -55,7 +55,7 @@ public class Processor {
                         InstructionDecode.InstDecode(InstructionFetch.Instruction);
                         Execute.Execute(ALUOp,ALUSrc,ReadData1,ReadData2,pc.getPc());
                         MemoryAccess.MemAccess(ALU.r+"",ReadData2+"",MemWrite,MemRead);
-                        WriteBack.WriteBack(ALU.r+"",rt,RegWrite,MemToReg+"",RegDst+"",registerFile);
+                        WriteBack.WriteBack(ALU.r+"",rt,RegWrite,MemToReg,RegDst,registerFile);
                         System.out.println("Clock Cycle: "+i);
                 }
         }
