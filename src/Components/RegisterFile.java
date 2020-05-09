@@ -1,15 +1,15 @@
 package Components;
 public class RegisterFile {
     static Register[] registers;
-    int size;
+    //int size;
 
-    public RegisterFile(int size)
+    public RegisterFile()
     {
-        this.size = size;
-        registers = new Register[size];
+        //this.size = size;
+        registers = new Register[16];
 
-        for(int i = 0; i < size; i++) {
-            registers[i] = new Register();
+        for(int i = 0; i < 16; ++i) {
+            registers[i] = new Register(16);
             registers[i].setData(i);
             registers[i].setRegister(i,""+i);
         }

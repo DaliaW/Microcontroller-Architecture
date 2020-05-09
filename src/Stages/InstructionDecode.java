@@ -36,22 +36,22 @@ public class InstructionDecode {
         a.add(rt);
         a.add(instruction.substring(10,16));
         //System.out.println("my instruction");       System.out.println(a.toString());
-        String Type = "";
+        String TypeRs,TypeRt,TypeRd = "";
 
 
         funct = instruction.substring(13,16);
         System.out.println("**************************** decoding ****************************");
         System.out.println("..................................................................");
+        TypeRs = getType(rs);
+        TypeRt = getType(rt);
+        System.out.println("Type of Register rs: "+TypeRs);
+        System.out.println("Type of Register rt: "+TypeRt);
 
         if(opCode.equals("0000")){
             //R Type
             rd = instruction.substring(10,13);
 
-
-
-            //System.out.println("rs "+ReadData1+"rt "+ReadData2);
-
-            Type = getType(rd);
+            TypeRd = getType(rd);
             if(!rd.equals("000")){
                 //////
                 Processor.ReadData1 = Processor.registerFile.readRegister(Integer.parseInt(rs,2));
@@ -59,13 +59,11 @@ public class InstructionDecode {
 
                 output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|rd:"
                         +rd+"|funct:"+funct;
-                System.out.println("Type of Register: "+Type);
+                System.out.println("Type of Register rd: "+TypeRd);
                 System.out.println(output);
-                //System.out.println("RegWrite: "+ RegWrite +"\n"+"RegDst: "+RegDst);
+
             }else{
-                //RegWrite = false;
                 System.out.println("can not access register zero");
-                //System.out.println("RegWrite: "+RegWrite);
             }
 
         }else if(opCode.equals("0010")){//J type (jump)
@@ -73,9 +71,8 @@ public class InstructionDecode {
             output = "opCode:" + opCode + "|immediate: "+a.get(1)+""+a.get(2);
             System.out.println(output);
 
-        }else if(opCode.equals("1001")){//I type (lw,sw)
-            //RegWrite = true;
-            //System.out.println("RegWrite: "+RegWrite);
+        }else if(opCode.equals("1000")||opCode.equals("1011")||opCode.equals("1001")){//I type (lw/sw/addi)
+
             output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|immediate "
                     +a.get(3);
             System.out.println(output);
@@ -89,7 +86,6 @@ public class InstructionDecode {
 
         }
         ControlUnit(opCode);
-        //RegWrite = false;
 
         System.out.println("*************************** finished decoding ****************************");
         System.out.println("..........................................................................");
@@ -105,33 +101,82 @@ public class InstructionDecode {
         if(opCode.equals("0000")){ //R type
             RegWrite = 1;
             RegDst = 1;
-            MemToReg = 1;
+            MemToReg = 0;
+            MemRead = 0;
+            MemWrite = 0;
+            Branch = 0;
+            Jump = 0;
             ALUOp = "10";
             System.out.println("WB controls: MemToReg: "+MemToReg+" ,RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" +
                     "EX controls: RegDest: "+RegDst+", ALUOp: "+ALUOp+", ALUSrc: "+ALUSrc);
-        }
-        else if(opCode.equals("1001")){ //I-type
-            RegWrite = 1;
-            MemRead = 1;
-            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
 
+            ALUControl();
+            System.out.println("ALU OPERATION: "+ALUOperation);
+        }
+        //I-type has 3 types (i.e. lw/sw/addi), each type has a different op code
+        else if(opCode.equals("1001")){ //addi
+            ALUOp = "00";
+            RegWrite =1;
+            RegDst = 0;
+            MemToReg = 0;
+            MemRead = 0;
+            MemWrite = 0;
+            Branch = 0;
+            Jump = 0;
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" );
+
+        }else if(opCode.equals("1000")){ //lw
+            ALUOp = "00";
+            RegWrite =1;
+            RegDst = 0;
+            MemToReg = 1;
+            MemRead = 1;
+            MemWrite = 0;
+            Branch = 0;
+            Jump = 0;
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" );
+        }else if(opCode.equals("1011")){ //sw
+            ALUOp = "00";
+            RegWrite =0;
+            RegDst = 0;
+            MemToReg = 1;
+            MemRead = 0;
+            MemWrite = 1;
+            Branch = 0;
+            Jump = 0;
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" );
         }
         else if(opCode.equals("1100")){ //Conditional Branch
             ALUOp ="01";
+            RegWrite =0;
+            RegDst = 0;
+            MemToReg = 0;
+            MemRead = 0;
+            MemWrite = 0;
             Branch = 1;
-            System.out.println("WB controls: MemToReg: "+"Don't care"+", RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+"\n" );
+            Jump = 0;
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" );
 
 
         }
-        else {// J type
-            System.out.println("WB controls: MemToReg: "+MemToReg+" RegWrite: "+RegWrite+"\n" +
-                    "MEM controls: MemRead: "+MemRead+" , MemWrite: "+MemWrite+", Branch: "+Branch+"\n");
+        else {// J type //opCode : 0010
+            ALUOp = "xx";
+            RegWrite =0;
+            RegDst = 0;
+            MemToReg = 0;
+            MemRead = 0;
+            MemWrite = 0;
+            Branch = 0;
+            Jump = 1;
+            System.out.println("WB controls: MemToReg: "+MemToReg+", RegWrite: "+RegWrite+"\n" +
+                    "MEM controls: MemRead: "+MemRead+", MemWrite: "+MemWrite+", Branch: "+Branch+", Jump: "+Jump+"\n" );
         }
-        ALUControl();
-        System.out.println("ALU OPERATION: "+ALUOperation);
+
 
     }
 
@@ -141,7 +186,7 @@ public class InstructionDecode {
         String regType = "";
         int m = Integer.parseInt(s);
         if(m == 0){
-            regType = "zero , Can not be modified";
+            regType = "zero , Always 0";
             RegWrite = 0;
         }
         if(m == 1){
@@ -149,17 +194,15 @@ public class InstructionDecode {
             RegWrite = 0;
         }
         if(m>= 2 && m<=3){
-            regType = "Function result";
+            regType = "Stores results";
+        }
+        if(m>= 4 && m<=7){
+            regType = "Stores arguments";
         }
         if(m>=8 && m<=15){
             regType = "Temporary registers";
         }
-        if(m>=16 && m<=23){
-            regType = "Saved registers";
-        }
-        if(m>=24 && m<=25){
-            regType = "Temporary registers";
-        }
+
 
         return regType;
     }

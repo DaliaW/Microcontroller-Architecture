@@ -7,8 +7,8 @@ public class Register {
     boolean read;
     boolean write;
 
-    public Register(){
-        size = 16;
+    public Register(int size){
+        this.size = size;
     }
 
     public int getdata(){

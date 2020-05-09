@@ -20,6 +20,7 @@ public class ALU {
             r=addOp(o1,o2);
             if (r==0)
                 flagZero=1;
+            else flagZero =0;
         }
 
         else if(operation.equals("0110")) {   //sub
@@ -27,6 +28,7 @@ public class ALU {
             r=subOp (o1,o2);
             if (r==0)
                 flagZero=1;
+            else flagZero =0;
         }
         else if(operation.equals("0010")) {  //mult
             Name = "MULT";
@@ -34,6 +36,7 @@ public class ALU {
             if (r==0) {
                 flagZero=1;
             }
+            else flagZero =0;
         }
         else  if(operation.equals("0000")) {   //AND
             Name = "AND";
@@ -41,6 +44,7 @@ public class ALU {
             if (r==0) {
                 flagZero=1;
             }
+            else flagZero =0;
         }
         else if(operation.equals("0001")) {   //OR
             Name = "OR";
@@ -48,18 +52,21 @@ public class ALU {
             if (r==0) {
                 flagZero=1;
             }
+            else flagZero =0;
         }
         else if(operation.equals("0101")) {   //SLL
             Name = "SLL";
             r=sllOp(o1,o2);
             if (r==0)
                 flagZero=1;
+            else flagZero =0;
         }
         else if(operation.equals("1110")) {   //SRL
             Name = "SRL";
             r=srlOp(o1,o2);
             if (r==0)
                 flagZero=1;
+            else flagZero =0;
         }
         else if(operation.equals("0111")) {
             //SLT
@@ -67,6 +74,7 @@ public class ALU {
             r=sltOp(o1,o2);
             if (r==0)
                 flagZero=1;
+            else flagZero =0;
         }
         else {
             Name = "invalid operation !";
@@ -80,7 +88,7 @@ public class ALU {
         System.out.println("Operation Name: "+Name+"\n"
                 +"ReadData1 in BIN: "+String.format("%016d", Integer.parseInt(o1Bin))+" ,ReadData1 in DEC: "+o1+"\n"
                 +"ReadData2 in BIN: "+String.format("%016d", Integer.parseInt(o2Bin))+" ,ReadData2 in DEC: "+o2+"\n"
-                +"ALUResult: "+res+"\n"+"Z-Flag Value: "+flagZero);
+                +"ALUResult: "+String.format("%016d", Integer.parseInt(res)) +" in BIN, "+r+" in DEC"+"\n"+"Z-Flag Value: "+flagZero);
 
     }
 
@@ -107,11 +115,11 @@ public class ALU {
         return (a | b);
 
     }
-    public static int sllOp (int a,int b) {
+    public static int sllOp (int a,int b) { //Shift bits of op1 left by distance op2; fills with zero bits on the right-hand side
         return (a << b);
 
     }
-    public static int srlOp (int a,int b) {
+    public static int srlOp (int a,int b) { //Shift bits of op1 right by distance op2; fills with zero bits on the left-hand side
         return (a >>> b);
 
     }

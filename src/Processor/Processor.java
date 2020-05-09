@@ -35,11 +35,13 @@ public class Processor {
         public static int MemWrite;
         public static int MemToReg;
         public static int Branch;
+        public static int Jump;
+
         public static RegisterFile registerFile;
 
 
         public static void main(String[] args) {
-                registerFile = new RegisterFile(16);
+                registerFile = new RegisterFile();
                 ALUSrc = 0; ALUOp = ""; RegWrite = 0; RegDst = 0; PCSrc = 0;
                 MemRead=0;MemToReg=0;MemWrite = 0;Branch = 0;
 
@@ -52,11 +54,13 @@ public class Processor {
                 for(int i = 0 ; i < m.getNumberOfInstructions();i++) {
                         System.out.println("Register File: " + registerFile.ToString()+"\n");
                         InstructionFetch.InstFetch(i);
+                        InstructionFetch.ProgCount();
                         InstructionDecode.InstDecode(InstructionFetch.Instruction);
                         Execute.Execute(ALUOp,ALUSrc,ReadData1,ReadData2,pc.getPc());
                         MemoryAccess.MemAccess(ALU.r+"",ReadData2+"",MemWrite,MemRead);
-                        WriteBack.WriteBack(ALU.r+"",rt,RegWrite,MemToReg,RegDst,registerFile);
+                        //WriteBack.WriteBack(ALU.r+"",rt,RegWrite,MemToReg,RegDst,registerFile);
                         System.out.println("Clock Cycle: "+i);
+
                 }
         }
 }
