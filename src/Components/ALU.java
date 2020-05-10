@@ -1,4 +1,7 @@
 package Components;
+
+import java.util.ArrayList;
+
 public class ALU {
     public static int flagZero = 0;
     public static String operationBIN;
@@ -13,7 +16,8 @@ public class ALU {
         this.o2=o2;
     }
 
-    public static void ALUEvaluator1( String operation,int o1,int o2) {
+    public static ArrayList<String> ALUEvaluator1(String operation, int o1, int o2) {
+        ArrayList<String> a  = new ArrayList<String>();
 
         if(operation.equals("0011")) {   //Add
             Name = "Add";
@@ -80,6 +84,12 @@ public class ALU {
             Name = "invalid operation !";
             System.out.println("operation not available");
         }
+        a.add(Name);
+        a.add(""+o1);
+        a.add(""+o2);
+        a.add(""+r);
+        a.add(""+flagZero);
+
         String o1Bin = Integer.toBinaryString(o1);
         String o2Bin = Integer.toBinaryString(o2);
         String res = Integer.toBinaryString(r);
@@ -90,6 +100,7 @@ public class ALU {
                 +"ReadData2 in BIN: "+String.format("%016d", Integer.parseInt(o2Bin))+" ,ReadData2 in DEC: "+o2+"\n"
                 +"ALUResult: "+String.format("%016d", Integer.parseInt(res)) +" in BIN, "+r+" in DEC"+"\n"+"Z-Flag Value: "+flagZero);
 
+        return a;
     }
 
     //Arithmetic Instructions

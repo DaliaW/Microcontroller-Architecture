@@ -3,7 +3,10 @@ package Processor;
 import Components.*;
 import Stages.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import static Stages.InstructionDecode.rt;
 
@@ -11,11 +14,11 @@ public class Processor {
         //InstructionMemory IM;
         static int clockcycle=1;
 //	static int pc;
-        InstructionFetch IF;
-        InstructionDecode ID;
-        Execute EXC;
-        MemoryAccess MA;
-        WriteBack WB;
+        static InstructionFetch IF;
+        static InstructionDecode ID;
+        static Execute EXC;
+        static MemoryAccess MA;
+        static WriteBack WB;
         public static Cache c;
         public static boolean fetch=false;
         public static boolean decode=false;
@@ -37,30 +40,173 @@ public class Processor {
         public static int Branch;
         public static int Jump;
 
+
+        static Queue<String> qFetch;
+        static Queue <ArrayList<String>> qdecode;
+        static Queue <ArrayList<String>> qexec;
+        static Queue <ArrayList<String>> qmem;
+        static Queue <ArrayList<String>> qwb;
+
         public static RegisterFile registerFile;
 
 
         public static void main(String[] args) {
+
+
                 registerFile = new RegisterFile();
                 ALUSrc = 0; ALUOp = ""; RegWrite = 0; RegDst = 0; PCSrc = 0;
                 MemRead=0;MemToReg=0;MemWrite = 0;Branch = 0;
-
+                qFetch = new LinkedList<String>();
+                qdecode = new LinkedList<ArrayList<String>>();
+                qexec = new LinkedList<ArrayList<String>>();
+                qmem = new LinkedList<ArrayList<String>>();
+                qwb = new LinkedList<ArrayList<String>>();
                 pc = new PC();
                 m = new Memory();
                 c = new Cache();
                 m.Load(); //Load Memory
                 c.Load(); //Load Cache
 
+                String instruction = "";
                 for(int i = 0 ; i < m.getNumberOfInstructions();i++) {
-                        System.out.println("Register File: " + registerFile.ToString()+"\n");
-                        InstructionFetch.InstFetch(i);
-                        InstructionFetch.ProgCount();
-                        InstructionDecode.InstDecode(InstructionFetch.Instruction);
-                        Execute.Execute(ALUOp,ALUSrc,ReadData1,ReadData2,pc.getPc());
-                        MemoryAccess.MemAccess(ALU.r+"",ReadData2+"",MemWrite,MemRead);
-                        //WriteBack.WriteBack(ALU.r+"",rt,RegWrite,MemToReg,RegDst,registerFile);
-                        System.out.println("Clock Cycle: "+i);
+                        int tempPc = pc.getPc();
+                        if (memacc) { // memory access to write back
+                                ArrayList<String> InstMemAcc = qmem.remove();
+                                String instnumb = InstMemAcc.get(2);
+                                System.out.println("write back stage of instruction");
+
+                                ArrayList<String> InstWriteBack = WB.WriteBack(ALU.r + "", rt, RegWrite, MemToReg, RegDst, registerFile);
+                                String WriteData = InstWriteBack.get(0);
+                                System.out.println("Write data =" + WriteData);
+
+                        }
+                        if (exec) { //decode to memory access
+                                ArrayList<String> InstExec = qexec.remove();
+                                String instnumb = InstExec.get(5);
+                                System.out.println("memory access stage of instruction: " + instnumb);
+
+                                ArrayList<String> InstMemAcc = MA.MemAccess(ALU.r + "", ReadData2 + "", MemWrite, MemRead);
+                                InstMemAcc.add(instnumb);
+                                qmem.add(InstMemAcc);
+                                exec = false;
+                        }
+                        if (decode) { //decode to execute
+                                ArrayList<String> instDec = qdecode.remove();
+                                String instnumb = instDec.get(5);
+                                System.out.println("executing instruction: " + instnumb);
+                                ArrayList<String> InstExec = EXC.Execute(ALUOp, ALUSrc, ReadData1, ReadData2, pc.getPc());
+                                InstExec.add(instnumb);
+                                qexec.add(InstExec);
+                                decode = false;
+
+                        }
+
+                        if (fetch) { //fetch to decode
+                                System.out.println("Decoding instruction: " + pc.getPc());
+                                ArrayList<String> instDec = ID.InstDecode(qFetch.remove());
+                                instDec.add(Integer.toString(pc.pc)); //no. of instruction
+                                qdecode.add(instDec);
+                                fetch = false;
+
+                        }
+
+                        System.out.println("fetching instruction: " + (i + 1));
+                        //IF.InstFetch(pc.pc);
+                        qFetch.add(IF.InstFetch(pc.pc));
+                        System.out.println("clock cycle: " + clockcycle);
+                        clockcycle++;
+                        pc.pc++;
 
                 }
+                        while(qmem.isEmpty()){
+                                int tempPc = pc.getPc();
+                                if (memacc) { // memory access to write back
+                                        ArrayList<String> InstMemAcc = qmem.remove();
+                                        String instnumb = InstMemAcc.get(2);
+                                        System.out.println("write back stage of instruction");
+
+                                        ArrayList<String> InstWriteBack = WB.WriteBack(ALU.r + "", rt, RegWrite, MemToReg, RegDst, registerFile);
+                                        String WriteData = InstWriteBack.get(0);
+                                        System.out.println("Write data =" + WriteData);
+
+                                }
+                                if (exec) { //decode to memory access
+                                        ArrayList<String> InstExec = qexec.remove();
+                                        String instnumb = InstExec.get(5);
+                                        System.out.println("memory access stage of instruction: " + instnumb);
+
+                                        ArrayList<String> InstMemAcc = MA.MemAccess(ALU.r + "", ReadData2 + "", MemWrite, MemRead);
+                                        InstMemAcc.add(instnumb);
+                                        qmem.add(InstMemAcc);
+                                        exec = false;
+                                }
+                                if (decode) { //decode to execute
+                                        ArrayList<String> instDec = qdecode.remove();
+                                        String instnumb = instDec.get(5);
+                                        System.out.println("executing instruction: " + instnumb);
+                                        ArrayList<String> InstExec = EXC.Execute(ALUOp, ALUSrc, ReadData1, ReadData2, pc.getPc());
+                                        InstExec.add(instnumb);
+                                        qexec.add(InstExec);
+                                        decode = false;
+
+                                }
+
+                                if (fetch) { //fetch to decode
+                                        System.out.println("Decoding instruction: " + pc.getPc());
+                                        ArrayList<String> instDec = ID.InstDecode(qFetch.remove());
+                                        instDec.add(Integer.toString(pc.pc)); //no. of instruction
+                                        qdecode.add(instDec);
+                                        fetch = false;
+
+                                }
+                                System.out.println("clock cycle: "+clockcycle);
+                                clockcycle++;
+                        }
+
+                        while(qexec.isEmpty()){
+                                int tempPc = pc.getPc();
+
+                                if (memacc) { // memory access to write back
+                                        ArrayList<String> InstMemAcc = qmem.remove();
+                                        String instnumb = InstMemAcc.get(2);
+                                        System.out.println("write back stage of instruction");
+
+                                        ArrayList<String> InstWriteBack = WB.WriteBack(ALU.r + "", rt, RegWrite, MemToReg, RegDst, registerFile);
+                                        String WriteData = InstWriteBack.get(0);
+                                        System.out.println("Write data =" + WriteData);
+
+                                }
+                                if (exec) { //decode to memory access
+                                        ArrayList<String> InstExec = qexec.remove();
+                                        String instnumb = InstExec.get(5);
+                                        System.out.println("memory access stage of instruction: " + instnumb);
+
+                                        ArrayList<String> InstMemAcc = MA.MemAccess(ALU.r + "", ReadData2 + "", MemWrite, MemRead);
+                                        InstMemAcc.add(instnumb);
+                                        qmem.add(InstMemAcc);
+                                        exec = false;
+                                }
+                                if (decode) { //decode to execute
+                                        ArrayList<String> instDec = qdecode.remove();
+                                        String instnumb = instDec.get(5);
+                                        System.out.println("executing instruction: " + instnumb);
+                                        ArrayList<String> InstExec = EXC.Execute(ALUOp, ALUSrc, ReadData1, ReadData2, pc.getPc());
+                                        InstExec.add(instnumb);
+                                        qexec.add(InstExec);
+                                        decode = false;
+
+                                }
+
+                                if (fetch) { //fetch to decode
+                                        System.out.println("Decoding instruction: " + pc.getPc());
+                                        ArrayList<String> instDec = ID.InstDecode(qFetch.remove());
+                                        instDec.add(Integer.toString(pc.pc)); //no. of instruction
+                                        qdecode.add(instDec);
+                                        fetch = false;
+
+                                }
+                                System.out.println("clock cycle: "+clockcycle);
+                                clockcycle++;
+                        }
         }
 }

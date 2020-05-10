@@ -29,7 +29,6 @@ public class MemoryAccess {
             arrli.add(ReadData2ret);
 
             Processor.memacc = true;
-            //d++;
             System.out.println("ALUresult: " + ALUresult + " ,ReadData2: " + ReadData2);
 
 

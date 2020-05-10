@@ -2,6 +2,7 @@ package Stages;
 
 import Components.ALU;
 import Components.RegisterFile;
+import Processor.Processor;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class WriteBack {
         System.out.println("**************************** Write Back ****************************");
         ArrayList<String> arrli = new ArrayList<String>();
 
-        if(MemToReg == 1 && RegDst == 1){
+        if(MemToReg == 1 || RegDst == 1){
 
         String   WriteData = "";
         int AluResInt=Integer.parseInt(ALUresult);
@@ -29,12 +30,13 @@ public class WriteBack {
 
 //        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+regDst);
 //        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;"+InstructionDecode.rd);
-//        String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
+        String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
         System.out.println("WRITE DATA: "+String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst)))));
 
         arrli.add(WriteData);}
         System.out.println("**************************** finished Write Back ****************************");
 
+        Processor.writeback = true;
         return arrli;
     }
 }

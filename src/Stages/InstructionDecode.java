@@ -1,7 +1,5 @@
 package Stages;
 
-import Components.Register;
-import Components.RegisterFile;
 import Processor.Processor;
 
 import java.util.ArrayList;
@@ -24,7 +22,8 @@ public class InstructionDecode {
       bits), PC incremented by 4. (32-bits).
      */
 
-    public static void InstDecode(String instruction){
+    public static ArrayList<String> InstDecode(String instruction){
+        Processor.decode = true;
         // System.out.println(s);
         a = new ArrayList<String>();
         opCode = instruction.substring(0,4);
@@ -50,7 +49,9 @@ public class InstructionDecode {
         if(opCode.equals("0000")){
             //R Type
             rd = instruction.substring(10,13);
-
+            a.remove(3);
+            a.add(rd);
+            a.add(funct);
             TypeRd = getType(rd);
             if(!rd.equals("000")){
                 //////
@@ -68,7 +69,7 @@ public class InstructionDecode {
 
         }else if(opCode.equals("0010")){//J type (jump)
             //RegWrite = false;
-            output = "opCode:" + opCode + "|immediate: "+a.get(1)+""+a.get(2);
+            output = "opCode:" + opCode + "|immediate: "+a.get(1)+""+a.get(2)+""+a.get(3);
             System.out.println(output);
 
         }else if(opCode.equals("1000")||opCode.equals("1011")||opCode.equals("1001")){//I type (lw/sw/addi)
@@ -89,7 +90,7 @@ public class InstructionDecode {
 
         System.out.println("*************************** finished decoding ****************************");
         System.out.println("..........................................................................");
-
+        return a;
     }
 
     /*

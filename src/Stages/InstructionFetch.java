@@ -1,15 +1,18 @@
 package Stages;
 
-import Components.PC;
 import Processor.Processor;
 
 public class InstructionFetch {
     public static String Instruction;
+    public static String pcInst;
 
-    public static void InstFetch(int i) {
+    public static String InstFetch(int i) {
         Instruction = Processor.c.readcashe(i);
         System.out.println("Instruction Fetched: "+Instruction);
-        System.out.println("Next PC: "+String.format("%016d", Integer.parseInt(Integer.toBinaryString(Processor.pc.getPc()+4))));
+        pcInst = String.format("%016d", Integer.parseInt(Integer.toBinaryString(Processor.pc.pc)));
+        System.out.println("Next PC: "+pcInst);
+        Processor.fetch = true;
+        return Instruction;
     }
 
     /*

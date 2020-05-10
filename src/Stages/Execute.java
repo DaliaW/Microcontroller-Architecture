@@ -3,7 +3,8 @@ package Stages;
 import Components.ALU;
 import Processor.Processor;
 
-import static Components.ALU.*;
+import java.util.ArrayList;
+
 import static Stages.InstructionDecode.ALUOperation;
 import static Stages.InstructionDecode.a;
 
@@ -17,10 +18,11 @@ public class Execute {
 
      – Outputs: ALUresult (32-bits) , ZeroFlag (1-bit), BranchAddressResult (32-bits), Read-
        Data2 (32-bits), PC incremented by 4. (32-bits).*/
-    public static void Execute(String ALUOp, int ALUSrc, int ReadData1, int ReadData2, int pc) {
+    public static ArrayList<String> Execute(String ALUOp, int ALUSrc, int ReadData1, int ReadData2, int pc) {
 
         System.out.println("**************************** executing ****************************");
         System.out.println("..........................................................................");
+        ArrayList<String> arr  = new ArrayList<String>();
 
         if(ALUOp.equals("01")){ //Branch
             if(ReadData1 != ReadData2){ //BNEQ
@@ -49,7 +51,8 @@ public class Execute {
         }
         else if (ALUOp.equals("10")) {
             //funct
-            ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
+            //ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
+            arr = ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
             } else
             System.out.println("invalid operator");
 //
@@ -61,6 +64,8 @@ public class Execute {
         System.out.println("**************************** finished executing ****************************");
         System.out.println("..........................................................................");
 
+        Processor.exec = true;
+        return arr;
 
 
     }
