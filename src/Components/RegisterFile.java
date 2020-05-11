@@ -1,6 +1,6 @@
 package Components;
 public class RegisterFile {
-    static Register[] registers;
+    public static Register[] registers;
     //int size;
 
     public RegisterFile()
@@ -31,8 +31,8 @@ public class RegisterFile {
 
 
         else {
-            registers[i].setRegister(i, value);
             registers[i].setData(Integer.parseInt(value));
+            registers[i].setRegister(i, value);
             registers[i].write=true;
         }}
 

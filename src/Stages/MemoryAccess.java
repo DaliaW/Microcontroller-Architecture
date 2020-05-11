@@ -28,12 +28,13 @@ public class MemoryAccess {
             arrli.add(ALUresultret);
             arrli.add(ReadData2ret);
 
-            Processor.memacc = true;
+
             System.out.println("ALUresult: " + ALUresult + " ,ReadData2: " + ReadData2);
 
 
 
         }
+        Processor.memacc = true;
         System.out.println("**************************** finished memory access ****************************");
         System.out.println("..........................................................................");
         return arrli;

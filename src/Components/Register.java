@@ -11,9 +11,7 @@ public class Register {
         this.size = size;
     }
 
-    public int getdata(){
-        return data;
-    }
+
 
     public String getRegister(){
         return register;
@@ -21,6 +19,9 @@ public class Register {
 
     public void setData(int v){
         this.data = v;
+    }
+    public int getdata(){
+        return this.data;
     }
 
     public void setRegister(int i, String name){

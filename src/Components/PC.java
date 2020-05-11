@@ -11,4 +11,8 @@ public class PC {
         return pc;
     }
 
+    public int increment(){
+        return pc +4;
+    }
+
 }

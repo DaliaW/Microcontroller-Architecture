@@ -55,11 +55,6 @@ public class Execute {
             arr = ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
             } else
             System.out.println("invalid operator");
-//
-//            System.out.println("Operation Name: "+ operation+"\n"
-//                    +"ReadData1: "+ReadData1+"\n"+"ReadData2: "+ReadData2+"\n"
-//                    +"Output: "+r+"\n"+"Z-Flag Value: "+flagZero+" ,PC: "+Processor.pc);
-
 
         System.out.println("**************************** finished executing ****************************");
         System.out.println("..........................................................................");
