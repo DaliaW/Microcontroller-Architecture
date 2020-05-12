@@ -84,7 +84,7 @@ public class ALU {
             Name = "invalid operation !";
             System.out.println("operation not available");
         }
-        a.add(Name);
+        a.add(operation);
         a.add(""+o1);
         a.add(""+o2);
         a.add(""+r);

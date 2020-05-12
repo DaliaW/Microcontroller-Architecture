@@ -5,6 +5,7 @@ import Processor.Processor;
 
 import java.util.ArrayList;
 
+import static Processor.Processor.registerFile;
 import static Stages.InstructionDecode.ALUOperation;
 import static Stages.InstructionDecode.a;
 
@@ -18,17 +19,20 @@ public class Execute {
 
      – Outputs: ALUresult (32-bits) , ZeroFlag (1-bit), BranchAddressResult (32-bits), Read-
        Data2 (32-bits), PC incremented by 4. (32-bits).*/
-    public static ArrayList<String> Execute(String ALUOp, int ALUSrc, int ReadData1, int ReadData2, int pc) {
+    public static ArrayList<String> Execute(String ALUOp, String ReadData1, String ReadData2, int pc) {
+
+        int rs1 = registerFile.readRegister(Integer.parseInt(ReadData1,2));
+        int rt1 = registerFile.readRegister(Integer.parseInt(ReadData2,2));
 
         System.out.println("**************************** executing ****************************");
         System.out.println("..........................................................................");
         ArrayList<String> arr  = new ArrayList<String>();
 
         if(ALUOp.equals("01")){ //Branch
-            if(ReadData1 != ReadData2){ //BNEQ
+            if(rs1 != rt1){ //BNEQ
                 pc  = InstructionFetch.ProgCount() + Integer.parseInt(a.get(3)) << 2;
 
-            }else if(ReadData1 > ReadData2){ //Branch on greater than
+            }else if(rs1 > rt1){ //Branch on greater than
                 pc  = InstructionFetch.ProgCount() + Integer.parseInt(a.get(3)) << 2;
 
             }
@@ -52,8 +56,8 @@ public class Execute {
         else if (ALUOp.equals("10")) {
             //funct
             //ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
-            arr = ALU.ALUEvaluator1(ALUOperation,ReadData1,ReadData2);
-            } else
+            arr = ALU.ALUEvaluator1(ALUOperation,rs1,rt1);
+        } else
             System.out.println("invalid operator");
 
         System.out.println("**************************** finished executing ****************************");
@@ -67,7 +71,7 @@ public class Execute {
 
 
 
-    }
+}
 
 
 

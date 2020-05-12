@@ -12,6 +12,7 @@ public class InstructionDecode {
     public static String opCode;
     public static ArrayList<String> a;
 
+
     public static String ALUOperation;
 
     /*
@@ -55,8 +56,8 @@ public class InstructionDecode {
             TypeRd = getType(rd);
             if(!rd.equals("000")){
                 //////
-                Processor.ReadData1 = Processor.registerFile.readRegister(Integer.parseInt(rs,2));
-                Processor.ReadData2 = Processor.registerFile.readRegister(Integer.parseInt(rt,2));
+//                Processor.ReadData1 = Processor.registerFile.readRegister(Integer.parseInt(rs,2));
+//                Processor.ReadData2 = Processor.registerFile.readRegister(Integer.parseInt(rt,2));
 
                 output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|rd:"
                         +rd+"|funct:"+funct;
@@ -87,6 +88,14 @@ public class InstructionDecode {
 
         }
         ControlUnit(opCode);
+        a.add(ALUOp);
+        a.add(RegWrite+"");
+        a.add(RegDst+"");
+        a.add(MemToReg+"");
+        a.add(MemRead+"");
+        a.add(MemWrite+"");
+        a.add(Branch+"");
+        a.add(Jump+"");
 
         System.out.println("*************************** finished decoding ****************************");
         System.out.println("..........................................................................");

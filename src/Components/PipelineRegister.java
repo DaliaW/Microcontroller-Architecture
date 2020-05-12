@@ -21,8 +21,13 @@ public class PipelineRegister {
     public ArrayList<String> RemoveFromPipeReg(){
         return pipelineRegister.remove();
     }
+
     public boolean isRegEmpty(){
         return pipelineRegister.isEmpty();
+    }
+
+    public void ToString(){
+        System.out.println(pipelineRegister.toString());
     }
 
 }

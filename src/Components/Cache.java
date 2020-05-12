@@ -61,7 +61,7 @@ public class Cache {
     public static void Load(){
         for(int i = 0 ; i < 1536; i++){
             if(Memory.Mem[i] != null)
-            Data[i] = Memory.Mem[i];
+                Data[i] = Memory.Mem[i];
         }
     }
 

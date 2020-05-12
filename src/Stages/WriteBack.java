@@ -18,6 +18,7 @@ public class WriteBack {
         System.out.println("**************************** Write Back ****************************");
         ArrayList<String> arrli = new ArrayList<String>();
 
+
         if(RegWrite == 1){
 
             if(MemToReg == 1){ //lw
@@ -49,7 +50,7 @@ public class WriteBack {
                 arrli.add(WriteData);
             }
 
-            }
+        }
         System.out.println("**************************** finished Write Back ****************************");
 
         Processor.writeback = true;

@@ -32,7 +32,7 @@ public class RegisterFile {
 
         else {
             registers[i].setData(Integer.parseInt(value));
-            registers[i].setRegister(i, value);
+            //registers[i].setRegister(i, value);
             registers[i].write=true;
         }}
 
