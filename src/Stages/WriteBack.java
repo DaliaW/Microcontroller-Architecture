@@ -17,10 +17,10 @@ public class WriteBack {
     //– Outputs: WriteData (32-bits).
 
     public static ArrayList<String> WriteBack(String ALUresult,String ReadData,String rd,int RegWrite, int MemToReg, int RegDst, RegisterFile r ) {
-        System.out.println("**************************** Write Back ****************************");
         ArrayList<String> arrli = new ArrayList<String>();
 
         if(RegWrite == 1){
+            System.out.println("**************************** Write Back ****************************");
 
             if(MemToReg == 1){ //lw
                 Processor.m.readDataMemory(Integer.parseInt(ReadData));
@@ -31,30 +31,33 @@ public class WriteBack {
                 System.out.println("Destination Register: "+regDst +", Data to be Written: "+ALUresult);
                 RegisterFile.writeRegister(regDst, ALUresult);
                 //String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
+                System.out.println();
                 System.out.println("Written Data in Register File: "+RegisterFile.readRegister(regDst)+" in Decimal, "+
                         String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))))+" in Binary");
 
                 arrli.add(WriteData);
             }
-            else{
+            else if(RegDst == 1){
                 String   WriteData = ALUresult;
                 int AluResInt=Integer.parseInt(ALUresult);
                 int readdataint=Integer.parseInt(ReadData);
                 //WriteData=ALUresult;
 
                 int regDst = Integer.parseInt(rd,2);
-
+                System.out.println();
                 System.out.println("Destination Register: "+regDst +", Data to be Written: "+ALUresult);
                 RegisterFile.writeRegister(regDst, ALUresult);
                 //String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
+
                 System.out.println("Written Data in Register File: "+RegisterFile.readRegister(regDst)+" in Decimal, "+
                         String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))))+" in Binary");
 
+                System.out.println();
                 arrli.add(WriteData);
             }
+            System.out.println("**************************** finished Write Back ****************************");
 
         }
-        System.out.println("**************************** finished Write Back ****************************");
 
         Processor.writeback = true;
 

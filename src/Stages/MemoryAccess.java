@@ -8,12 +8,13 @@ public class MemoryAccess {
     public static ArrayList<String> MemAccess(String ALUresult, String ReadData2, int  MemWrite,int  MemRead) {
 
 
-        System.out.println("**************************** memory access ****************************");
-        System.out.println("..........................................................................");
+
         String ALUresultret = ALUresult;
         String ReadData2ret = ReadData2;
         ArrayList<String> arrli = new ArrayList<String>();
         if(MemRead == 1 || MemWrite == 1) {
+            System.out.println("**************************** memory access ****************************");
+            System.out.println("..........................................................................");
 
             //System.out.println("ALU....>" + ALUresult);
 
@@ -33,14 +34,16 @@ public class MemoryAccess {
 
             System.out.println("ALUresult: " + ALUresult + " ,ReadData2: " + ReadData2ret);
 
+            System.out.println("**************************** finished memory access ****************************");
+            System.out.println("..........................................................................");
+
 
 
         }
         arrli.add(ALUresultret);
         arrli.add(ReadData2ret);
         Processor.memacc = true;
-        System.out.println("**************************** finished memory access ****************************");
-        System.out.println("..........................................................................");
+
         return arrli;
 
     }

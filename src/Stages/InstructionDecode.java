@@ -138,7 +138,7 @@ public class InstructionDecode {
     public static void ControlUnit(String opCode){
         if(opCode.equals("0000")){ //R type
             RegWrite = 1;
-            RegDst = 1;
+            RegDst = 1;  //RegDst indicates whether it's rd or rt register
             MemToReg = 0;
             MemRead = 0;
             MemWrite = 0;
@@ -157,7 +157,7 @@ public class InstructionDecode {
             ALUOp = "00";
             RegWrite =1;
             RegDst = 0;
-            MemToReg = 0;
+            MemToReg = 1;
             MemRead = 0;
             MemWrite = 0;
             Branch = 0;
