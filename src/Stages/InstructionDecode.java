@@ -42,27 +42,35 @@ public class InstructionDecode {
         funct = instruction.substring(13,16);
         System.out.println("**************************** decoding ****************************");
         System.out.println("..................................................................");
-        TypeRs = getType(rs);
-        TypeRt = getType(rt);
-        System.out.println("Type of Register rs: "+TypeRs);
-        System.out.println("Type of Register rt: "+TypeRt);
+
 
         if(opCode.equals("0000")){
             //R Type
+            TypeRs = getType(rs);
+            TypeRt = getType(rt);
+            System.out.println("Type of Register rs: "+TypeRs);
+            System.out.println("Type of Register rt: "+TypeRt);
+
             rd = instruction.substring(10,13);
+            TypeRd = getType(rd);
+            System.out.println("Type of Register rd: "+TypeRd);
+
+
             a.remove(3);
             a.add(rd);
             a.add(funct);
-            TypeRd = getType(rd);
+
             if(!rd.equals("000")){
                 //////
 //                Processor.ReadData1 = Processor.registerFile.readRegister(Integer.parseInt(rs,2));
 //                Processor.ReadData2 = Processor.registerFile.readRegister(Integer.parseInt(rt,2));
 
+                System.out.println();
                 output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|rd:"
                         +rd+"|funct:"+funct;
-                System.out.println("Type of Register rd: "+TypeRd);
+
                 System.out.println(output);
+                System.out.println();
 
             }else{
                 System.out.println("can not access register zero");
@@ -70,24 +78,44 @@ public class InstructionDecode {
 
         }else if(opCode.equals("0010")){//J type (jump)
             //RegWrite = false;
-            output = "opCode:" + opCode + "|immediate: "+a.get(1)+""+a.get(2)+""+a.get(3);
+
+            String j = a.get(1)+""+a.get(2)+""+a.get(a.size()-1);
+            a.remove(1);
+            a.remove(2);
+            a.remove(a.size()-1);
+            //add to arraylist the immediate of jump
+            a.add(j);
+            System.out.println();
+
+            output = "opCode:" + opCode + "|immediate: "+j;
             System.out.println(output);
+            System.out.println();
+
 
         }else if(opCode.equals("1000")||opCode.equals("1011")||opCode.equals("1001")){//I type (lw/sw/addi)
 
             output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|immediate "
                     +a.get(3);
+            System.out.println();
+
             System.out.println(output);
+            System.out.println();
+
 
 
         }else if(opCode.equals("1100")){//(BEQ) branch
             output = "opCode:" + opCode + "|rs:"+rs+"|rt:"+rt+"|immediate "
                     +a.get(3);
+            System.out.println();
+
             System.out.println(output);
+            System.out.println();
+
 
 
         }
         ControlUnit(opCode);
+
         a.add(ALUOp);
         a.add(RegWrite+"");
         a.add(RegDst+"");

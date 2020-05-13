@@ -6,8 +6,8 @@ public class ALU {
     public static int flagZero = 0;
     public static String operationBIN;
     public static String Name;
-    int o1;
-    int o2;
+    static int o1;
+    static int o2;
     public static int r ;
 
     public ALU(String operation,int o1,int o2) {
@@ -72,8 +72,7 @@ public class ALU {
                 flagZero=1;
             else flagZero =0;
         }
-        else if(operation.equals("0111")) {
-            //SLT
+        else if(operation.equals("0111")) { //SLT
             Name = "SLT";
             r=sltOp(o1,o2);
             if (r==0)
