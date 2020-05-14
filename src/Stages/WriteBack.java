@@ -31,10 +31,10 @@ public class WriteBack {
                 System.out.println("Destination Register: "+regDst +", Data to be Written: "+ALUresult);
                 RegisterFile.writeRegister(regDst, ALUresult);
                 //String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))));
-                System.out.println();
+
                 System.out.println("Written Data in Register File: "+RegisterFile.readRegister(regDst)+" in Decimal, "+
                         String.format("%016d", Integer.parseInt(Integer.toBinaryString(RegisterFile.readRegister(regDst))))+" in Binary");
-
+                System.out.println();
                 arrli.add(WriteData);
             }
             else if(RegDst == 1){

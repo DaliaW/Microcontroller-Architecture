@@ -70,19 +70,17 @@ public class Processor {
         System.out.println("Register File before any changes: " + registerFile.ToString()+"\n");
 
         int instructionCycle=5+ m.getNumberOfInstructions()-1;
-        //System.out.println(instructionCycle);
 
         for(int i = 0 ; i < instructionCycle;i++) {
             int tempPc = pc.getPc();
+
             if (i<m.getNumberOfInstructions()+4 && memacc) {// memory access to write back
                 ArrayList<String> InstMemAcc = qmem.RemoveFromPipeReg();
-                System.out.println(InstMemAcc.toString());
+
                 if(RegDst == 1) {
+                    //destination Req --> R-type
                     String ALUresultret = InstMemAcc.get(0);
                     String ReadData = InstMemAcc.get(1);  //Data coming from Data Memory
-                    //String ReadData1 = InstMemAcc.get(2);
-                    //String ReadData2 = InstMemAcc.get(3);
-                    //String result = InstMemAcc.get(4);
                     String rd = InstMemAcc.get(3);
                     String ALUOp = InstMemAcc.get(4);
 
@@ -95,9 +93,6 @@ public class Processor {
                     System.out.println("write back stage of instruction: " + instnumb);
 
                     ArrayList<String> InstWriteBack = WB.WriteBack(ALUresultret, ReadData, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
-
-                    System.out.println("WRITEBACK");
-                    System.out.println(InstWriteBack.toString());
 
                     System.out.println("Register File: " + registerFile.ToString() + "\n");
                     memacc = false;
@@ -121,9 +116,6 @@ public class Processor {
 
                     ArrayList<String> InstWriteBack = WB.WriteBack(result, ReadData2, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
 
-                    System.out.println("WRITEBACK");
-                    System.out.println(InstWriteBack.toString());
-
                     System.out.println("Register File: " + registerFile.ToString() + "\n");
                     memacc = false;
 
@@ -142,10 +134,8 @@ public class Processor {
                 String  result  = InstExec.get(3);
                 String  FlagZero  = InstExec.get(4);
 
-                //String rsValue=InstExec.get(6);
-                //String rtValue=InstExec.get(7);
                 String rd= InstExec.get(5);
-                //String func =InstExec.get(9);
+
                 String Aluop = InstExec.get(6);
                 String RegWrite = InstExec.get(7);
                 String RegDst = InstExec.get(8);
@@ -153,21 +143,14 @@ public class Processor {
                 String MemRead = InstExec.get(10);
                 String MemWrite = InstExec.get(11);
                 String Branch = InstExec.get(12);
-                String Jump  = InstExec.get(13);
+
                 String instnumb=InstExec.get(InstExec.size()-1);
                 System.out.println("memory access stage of instruction: " + instnumb);
 
                 ArrayList<String> InstMemAcc = MA.MemAccess(result , readData2 , Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
-                //InstMemAcc.add(operation);
-                //InstMemAcc.add(readData1);
-                //InstMemAcc.add(readData2);
-                //InstMemAcc.add(result);
+
                 InstMemAcc.add(FlagZero);
-                //InstMemAcc.add(opcode);
-                //InstMemAcc.add(rsValue);
-                //InstMemAcc.add(rtValue);
                 InstMemAcc.add(rd);
-                //InstMemAcc.add(func);
                 InstMemAcc.add(Aluop);
                 InstMemAcc.add(RegWrite);
                 InstMemAcc.add( RegDst);
@@ -175,7 +158,6 @@ public class Processor {
                 InstMemAcc.add(MemRead);
                 InstMemAcc.add(  MemWrite);
                 InstMemAcc.add( Branch);
-                InstMemAcc.add( Jump);
                 InstMemAcc.add(instnumb);
 
                 qmem.AddToReg(InstMemAcc);
@@ -184,7 +166,6 @@ public class Processor {
                 if(opCode.equals("1000")||opCode.equals("1011")||opCode.equals("1001")||opCode.equals("1100")){
                     //I-type
                     ArrayList<String> InstExec = qexec.RemoveFromPipeReg();
-                    System.out.println("INSTEXEC: "+InstExec.toString());
                     String  result  = InstExec.get(0);
                     String  readData2  = InstExec.get(1);
                     String  pc  = InstExec.get(2);
@@ -195,9 +176,7 @@ public class Processor {
                     String MemRead = InstExec.get(7);
                     String MemWrite = InstExec.get(8);
                     String Branch = InstExec.get(9);
-                    String Jump  = InstExec.get(10);
                     String instnumb=InstExec.get(InstExec.size()-1);
-                    System.out.println(InstExec.toString()+ "INSTEXEC");
                     System.out.println("memory access stage of instruction: " + instnumb);
                     ArrayList<String> InstMemAcc = MA.MemAccess(result , readData2 , Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
                     InstMemAcc.add(Aluop);
@@ -207,17 +186,12 @@ public class Processor {
                     InstMemAcc.add(MemRead);
                     InstMemAcc.add(MemWrite);
                     InstMemAcc.add(Branch);
-                    InstMemAcc.add(Jump);
                     InstMemAcc.add(instnumb);
 
                     qmem.AddToReg(InstMemAcc);
 
-
-
                 }
-                ////////////////////////
-                System.out.println("QMEM");
-                qmem.ToString();
+
                 exec = false;
             }
             if (i<m.getNumberOfInstructions()+2 && decode) { //decode to execute
@@ -228,8 +202,7 @@ public class Processor {
                 String opcode=instDec.get(0);
                 
                 if(opcode.equals("0000")){ //R-type
-                    //(operation,operand1,operand2,result,FlagZero,rd,Aluop
-                    // ,RegWrite,RegDst,MemToReg,MemRead,MemWrite,Branch,Jump,opcode,instnumb)
+
                 rsValue=instDec.get(1);
                 rtValue=instDec.get(2);
                 String rd= instDec.get(3);
@@ -260,7 +233,6 @@ public class Processor {
                     qexec.AddToReg(InstExec);
                 }
                 else if(opcode.equals("0010")){ //jump
-                    //(pc,Aluop,RegWrite,RegDst,MemToReg,MemRead,MemWrite,Branch,Jump,opcode,instnumb)
                     String j = instDec.get(1);
                     Aluop = instDec.get(2);
                     RegWrite = instDec.get(3);
@@ -287,9 +259,7 @@ public class Processor {
                     qexec.AddToReg(InstExec);
                 }
                 else if(opcode.equals("1000")||opcode.equals("1011")||opcode.equals("1001")||opcode.equals("1100")){
-                    //(res,readdata2,pc,Aluop,RegWrite,RegDst,MemToReg,MemRead,MemWrite,Branch,Jump,opcode,instnumb)
 
-                    //BEQ/ADDi/BNEQ/lw/sw
                     opcode = instDec.get(0);
                     rsValue=instDec.get(1);
                     rtValue=instDec.get(2);
@@ -322,9 +292,6 @@ public class Processor {
 
                 }
 
-                ///////////////////////
-                System.out.println("QEXEC");
-                qexec.ToString();
                 decode = false;
 
             }
@@ -334,9 +301,7 @@ public class Processor {
                 ArrayList<String> instDec = ID.InstDecode(qFetch.remove());
                 instDec.add(Integer.toString(pc.pc)); //no. of instruction
                 qdecode.AddToReg(instDec);
-                /////////////////////////////////
-                System.out.println("QDECODE");
-                qdecode.ToString();
+
                 fetch = false;
 
             }
@@ -344,7 +309,6 @@ public class Processor {
 
             if(i<m.getNumberOfInstructions()) {
                 System.out.println("fetching instruction: " + (i + 1));
-                //IF.InstFetch(pc.pc);
                 qFetch.add(IF.InstFetch(pc.pc));
 
             }

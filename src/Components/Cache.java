@@ -50,7 +50,7 @@ public class Cache {
         }
         else
             System.out.println("cannot find in cache");
-        Memory.writeDataMemory(address , value);
+            Memory.writeDataMemory(address , value);
 
     }
 

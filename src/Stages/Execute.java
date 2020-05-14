@@ -31,23 +31,33 @@ public class Execute {
             int rs1 = registerFile.readRegister(Integer.parseInt(ReadData1,2));
             int rt1 = registerFile.readRegister(Integer.parseInt(ReadData2,2));
 
+            String actAsSignExtend = "0000"+Immediate;
+
             if(rs1 != rt1){ //BNEQ
-                int Newpc  = PC.pc+4 + Integer.parseInt(Immediate) << 2;
-                pc = Newpc;
-                System.out.println("NEW PC: "+Newpc);
+                int res = Integer.parseInt(actAsSignExtend) *4;
+                int branch  = PC.pc+4 + res;
+                System.out.println("Operation Name: Branch on greater than");
+                System.out.println("Branch Address: "+ String.format("%016d",Integer.parseInt(Integer.toBinaryString(branch))));
 
+                arr.add(String.format("%016d",Integer.parseInt(Integer.toBinaryString(branch))));
+                arr.add(ReadData2);
+                arr.add(pc+"");
             }else if(rs1 > rt1){ //Branch on greater than
-                int Newpc  = PC.pc + Integer.parseInt(Immediate) << 2;
-                pc = Newpc;
-                System.out.println("NEW PC: "+Newpc);
-
+                int res = Integer.parseInt(actAsSignExtend) *4;
+                int branch  = PC.pc+4 + res;
+                System.out.println("Operation Name: Branch on greater than");
+                System.out.println("Branch Address: "+ String.format("%016d",Integer.parseInt(Integer.toBinaryString(branch))));
+                arr.add(String.format("%016d",Integer.parseInt(Integer.toBinaryString(branch))));
+                arr.add(ReadData2);
+                arr.add(pc+"");
             }
             else{ //they're equal then Ignore and increment pc by 4
                 int Newpc = PC.pc +4;
                 pc = Newpc;
-                System.out.println("NEW PC: "+Newpc);
+                System.out.println("NEW PC: "+ String.format("%016d",Integer.parseInt(Integer.toBinaryString(Newpc))));
 
             }
+
 
 
             System.out.println("**************************** finished executing ****************************");
@@ -60,6 +70,9 @@ public class Execute {
                 System.out.println();
                 System.out.println("Operation Name: LW"+", MemRead Flag: "+MemRead);
                 System.out.println();
+                arr.add(ReadData1);
+                arr.add(ReadData2);
+                arr.add(Immediate);
 
             }else if(opCode.equals("1001")){
                 //addi
@@ -73,7 +86,7 @@ public class Execute {
                 arr.add(res+"");
                 arr.add(ReadData2);
                 arr.add(pc+"");
-                System.out.println("arr addi "+ arr.toString());
+                //System.out.println("arr addi "+ arr.toString());
             }else { //sw
             Processor.MemWrite = 1;
                 System.out.println();
