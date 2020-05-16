@@ -23,6 +23,7 @@ public class Processor {
     public static boolean exec=false;
     public static boolean memacc=false;
     public static boolean writeback ;
+    static boolean RType;
     public static Memory m;
     public static PC pc;
     public static int ReadData1;
@@ -67,7 +68,7 @@ public class Processor {
         m.Load(); //Load Memory
         c.Load(); //Load Cache
 
-        System.out.println("Register File before any changes: " + registerFile.ToString()+"\n");
+        System.out.println("Register File before any changes: "+"\n" + registerFile.ToString()+"\n");
 
         int instructionCycle=5+ m.getNumberOfInstructions()-1;
 
@@ -77,122 +78,126 @@ public class Processor {
             if (i<m.getNumberOfInstructions()+4 && memacc) {// memory access to write back
                 ArrayList<String> InstMemAcc = qmem.RemoveFromPipeReg();
 
-                if(RegDst == 1) {
-                    //destination Req --> R-type
-                    String ALUresultret = InstMemAcc.get(0);
-                    String ReadData = InstMemAcc.get(1);  //Data coming from Data Memory
-                    String rd = InstMemAcc.get(3);
-                    String ALUOp = InstMemAcc.get(4);
+                String RegDst = InstMemAcc.get(6);
+                try {
+                    if (Integer.parseInt(RegDst) == 1) {
+                        //destination Req --> R-type
+                        String ALUresultret = InstMemAcc.get(0);
+                        String ReadData = InstMemAcc.get(1);  //Data coming from Data Memory
+                        String rd = InstMemAcc.get(3);
+                        String ALUOp = InstMemAcc.get(4);
 
-                    String RegWrite = InstMemAcc.get(5);
-                    String RegDst = InstMemAcc.get(6);
-                    String MemToReg = InstMemAcc.get(7);
+                        String RegWrite = InstMemAcc.get(5);
+                        //String RegDst = InstMemAcc.get(6);
+                        String MemToReg = InstMemAcc.get(7);
 
-                    String instnumb = InstMemAcc.get(InstMemAcc.size() - 1);
-                    System.out.println("...............................................");
-                    System.out.println("write back stage of instruction: " + instnumb);
+                        String instnumb = InstMemAcc.get(InstMemAcc.size() - 1);
+                        System.out.println("...............................................");
+                        System.out.println("write back stage of instruction: " + instnumb);
 
-                    ArrayList<String> InstWriteBack = WB.WriteBack(ALUresultret, ReadData, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
+                        ArrayList<String> InstWriteBack = WB.WriteBack(ALUresultret, ReadData, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
 
-                    System.out.println("Register File: " + registerFile.ToString() + "\n");
-                    memacc = false;
+                        System.out.println("Register File: " + registerFile.ToString() + "\n");
+                        memacc = false;
+                    } else {
+                        String result = InstMemAcc.get(0);
+                        String ReadData2 = InstMemAcc.get(1);
+                        String Aluop = InstMemAcc.get(2);
+                        String RegWrite = InstMemAcc.get(3);
+                        RegDst = InstMemAcc.get(4);
+                        String MemToReg = InstMemAcc.get(5);
+                        String MemRead = InstMemAcc.get(6);
+                        String MemWrite = InstMemAcc.get(7);
+                        String Branch = InstMemAcc.get(8);
+                        String Jump = InstMemAcc.get(9);
+                        String instnumb = InstMemAcc.get(InstMemAcc.size() - 1);
+
+                        System.out.println("...............................................");
+                        System.out.println("write back stage of instruction: " + instnumb);
+
+                        ArrayList<String> InstWriteBack = WB.WriteBack(result, ReadData2, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
+
+                        System.out.println("Register File: " + registerFile.ToString() + "\n");
+                        memacc = false;
+
+                    }
+                } catch (Exception e) {
+                    System.out.println("can not write in Reg");
                 }
-                else
-                {
-                    String result = InstMemAcc.get(0);
-                    String ReadData2 = InstMemAcc.get(1);
-                    String Aluop=InstMemAcc.get(2);
-                    String RegWrite = InstMemAcc.get(3);
-                    String RegDst = InstMemAcc.get(4);
-                    String MemToReg = InstMemAcc.get(5);
-                    String MemRead =InstMemAcc.get(6);
-                    String MemWrite=InstMemAcc.get(7);
-                    String Branch=InstMemAcc.get(8);
-                    String Jump=InstMemAcc.get(9);
-                    String instnumb=InstMemAcc.get(InstMemAcc.size()-1);
-
-                    System.out.println("...............................................");
-                    System.out.println("write back stage of instruction: " + instnumb);
-
-                    ArrayList<String> InstWriteBack = WB.WriteBack(result, ReadData2, rd, Integer.parseInt(RegWrite), Integer.parseInt(MemToReg), Integer.parseInt(RegDst), registerFile);
-
-                    System.out.println("Register File: " + registerFile.ToString() + "\n");
-                    memacc = false;
-
-                }
-
-
-
             }
             if (i<m.getNumberOfInstructions()+3 && exec) { //execute to memory access
-                if(opCode.equals("0000")){ //R-type
-                    ArrayList<String> InstExec = qexec.RemoveFromPipeReg();
+                try {
+                    if (opCode.equals("0000")) { //R-type
+                        ArrayList<String> InstExec = qexec.RemoveFromPipeReg();
 
-                    String operation = InstExec.get(0);
-                String readData1 = InstExec.get(1);
-                String  readData2  = InstExec.get(2);
-                String  result  = InstExec.get(3);
-                String  FlagZero  = InstExec.get(4);
+                        String operation = InstExec.get(0);
+                        String readData1 = InstExec.get(1);
+                        String readData2 = InstExec.get(2);
+                        String result = InstExec.get(3);
+                        String FlagZero = InstExec.get(4);
 
-                String rd= InstExec.get(5);
+                        String rd = InstExec.get(5);
 
-                String Aluop = InstExec.get(6);
-                String RegWrite = InstExec.get(7);
-                String RegDst = InstExec.get(8);
-                String  MemToReg = InstExec.get(9);
-                String MemRead = InstExec.get(10);
-                String MemWrite = InstExec.get(11);
-                String Branch = InstExec.get(12);
+                        String Aluop = InstExec.get(6);
+                        String RegWrite = InstExec.get(7);
+                        String RegDst = InstExec.get(8);
+                        String MemToReg = InstExec.get(9);
+                        String MemRead = InstExec.get(10);
+                        String MemWrite = InstExec.get(11);
+                        String Branch = InstExec.get(12);
 
-                String instnumb=InstExec.get(InstExec.size()-1);
-                System.out.println("memory access stage of instruction: " + instnumb);
+                        String instnumb = InstExec.get(InstExec.size() - 1);
+                        System.out.println("memory access stage of instruction: " + instnumb);
 
-                ArrayList<String> InstMemAcc = MA.MemAccess(result , readData2 , Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
+                        ArrayList<String> InstMemAcc = MA.MemAccess(result, readData2, Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
 
-                InstMemAcc.add(FlagZero);
-                InstMemAcc.add(rd);
-                InstMemAcc.add(Aluop);
-                InstMemAcc.add(RegWrite);
-                InstMemAcc.add( RegDst);
-                InstMemAcc.add(  MemToReg);
-                InstMemAcc.add(MemRead);
-                InstMemAcc.add(  MemWrite);
-                InstMemAcc.add( Branch);
-                InstMemAcc.add(instnumb);
+                        InstMemAcc.add(FlagZero);
+                        InstMemAcc.add(rd);
+                        InstMemAcc.add(Aluop);
+                        InstMemAcc.add(RegWrite);
+                        InstMemAcc.add(RegDst);
+                        InstMemAcc.add(MemToReg);
+                        InstMemAcc.add(MemRead);
+                        InstMemAcc.add(MemWrite);
+                        InstMemAcc.add(Branch);
+                        InstMemAcc.add(instnumb);
 
-                qmem.AddToReg(InstMemAcc);
+                        qmem.AddToReg(InstMemAcc);
+                    }
+
+                    if (opCode.equals("1000") || opCode.equals("1011") || opCode.equals("1001") || opCode.equals("1100")) {
+                        //I-type
+                        ArrayList<String> InstExec = qexec.RemoveFromPipeReg();
+                        String result = InstExec.get(0);
+                        String readData2 = InstExec.get(1);
+                        String pc = InstExec.get(2);
+                        String Aluop = InstExec.get(3);
+                        String RegWrite = InstExec.get(4);
+                        String RegDst = InstExec.get(5);
+                        String MemToReg = InstExec.get(6);
+                        String MemRead = InstExec.get(7);
+                        String MemWrite = InstExec.get(8);
+                        String Branch = InstExec.get(9);
+                        String instnumb = InstExec.get(InstExec.size() - 1);
+                        System.out.println("memory access stage of instruction: " + instnumb);
+                        ArrayList<String> InstMemAcc = MA.MemAccess(result, readData2, Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
+                        InstMemAcc.add(Aluop);
+                        InstMemAcc.add(RegWrite);
+                        InstMemAcc.add(RegDst);
+                        InstMemAcc.add(MemToReg);
+                        InstMemAcc.add(MemRead);
+                        InstMemAcc.add(MemWrite);
+                        InstMemAcc.add(Branch);
+                        InstMemAcc.add(instnumb);
+
+                        qmem.AddToReg(InstMemAcc);
+
+                    }
+
+                    exec = false;
+                }catch (Exception e){
+                    System.out.println("can not write into memory");
                 }
-
-                if(opCode.equals("1000")||opCode.equals("1011")||opCode.equals("1001")||opCode.equals("1100")){
-                    //I-type
-                    ArrayList<String> InstExec = qexec.RemoveFromPipeReg();
-                    String  result  = InstExec.get(0);
-                    String  readData2  = InstExec.get(1);
-                    String  pc  = InstExec.get(2);
-                    String Aluop = InstExec.get(3);
-                    String RegWrite = InstExec.get(4);
-                    String RegDst = InstExec.get(5);
-                    String  MemToReg = InstExec.get(6);
-                    String MemRead = InstExec.get(7);
-                    String MemWrite = InstExec.get(8);
-                    String Branch = InstExec.get(9);
-                    String instnumb=InstExec.get(InstExec.size()-1);
-                    System.out.println("memory access stage of instruction: " + instnumb);
-                    ArrayList<String> InstMemAcc = MA.MemAccess(result , readData2 , Integer.parseInt(MemWrite), Integer.parseInt(MemRead));
-                    InstMemAcc.add(Aluop);
-                    InstMemAcc.add(RegWrite);
-                    InstMemAcc.add(RegDst);
-                    InstMemAcc.add(MemToReg);
-                    InstMemAcc.add(MemRead);
-                    InstMemAcc.add(MemWrite);
-                    InstMemAcc.add(Branch);
-                    InstMemAcc.add(instnumb);
-
-                    qmem.AddToReg(InstMemAcc);
-
-                }
-
-                exec = false;
             }
             if (i<m.getNumberOfInstructions()+2 && decode) { //decode to execute
                 ArrayList<String> instDec = qdecode.RemoveFromPipeReg();
