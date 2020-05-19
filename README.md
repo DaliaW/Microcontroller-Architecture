@@ -1,5 +1,6 @@
 # Microcontroller-Architecture
 A simulation of our own Microcontroller Architecture in java.
+
 First of all, for the micro-architecture, we have chosen the Von Neumann architecture which has the following properties :
 -It has one memory for data and instructions
 -A single set of address/data buses between CPU and memory
