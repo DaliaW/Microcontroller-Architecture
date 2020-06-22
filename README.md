@@ -9,17 +9,17 @@ First of all, for the micro-architecture, we have chosen the Von Neumann archite
 Secondly, we chose the size of the instruction memory and data memory. For each of the two memories the following memory size was picked (1024 x 16-bit ). The total number of registers used were 16 Registers.
 As for the Instruction Format, we used Instruction set 1, which contained the following Instructions :
 
-a) Arithmetic Instructions: 
+## Arithmetic Instructions: 
 1. Add. 2. Add immediate. 3. Sub. 4. Multiply.
- b) Logical Instructions: 
+## b) Logical Instructions: 
 1. And  2. Or immediate 3. Shift left logical. 4. Shift right logical. 
-c) Data Transfer Instructions: 
+## c) Data Transfer Instructions: 
 1. Load word. 2. Store word
-d) Conditional Branch Instructions: 
+## d) Conditional Branch Instructions: 
 1. Branch on not equal. 2. Branch on greater than
-e) Comparison Instructions: 
+## e) Comparison Instructions: 
 1. Set on less than 
-f) Unconditional Jump Instructions: 
+## f) Unconditional Jump Instructions: 
 1. Jump
 
 Each instruction uses 16 bits in its format.
@@ -36,7 +36,7 @@ Code and flow
 
 In our projects we have three packages first one for components (the components that the PC use to run a program), second contains all stages that the instruction goes through to be executed in the last package is the processor package which contains Processor class, it’s like a simulation of the Processor using our architecture and I will describe each package briefly below :
 
-Components Package :
+## Components Package :
 We have 7 classes that represent a component and for each component. We have a class for ALU, Cache, Memory, PC, Register, Pipeline Register (used for the pipeline stage), and a Register file class that holds the 16 bits registers with their data.
 there are common methods in cash and memory like write to and read from methods, in ALU we handle all arithmetic operations, comparisons and logic gate operations too, in PC class we use increment and getPc methods and in class Register, we have methods getRegister, setRegister, getdata and setData of any register 
 By Accessing the components and using its methods we can do the stages that each instruction is supposed to go through.
@@ -48,11 +48,11 @@ And we will explain brief info about each stage below:
 
 
 
-First of all InstructionFetch stage:
+## First of all InstructionFetch stage:
 After the Instruction is loaded from memory to cache, the instruction is fetched from the cache using method readCashe in class Cache and after that, the pc is incremented to point to the next instruction, And then setting the flag fetch that is used in the pipelining to True, as an indicator that the instruction finished the fetching process.
 
 
-Second of all Decode:
+## Second of all Decode:
 First, we set the flag decode to true to be as an indicator in the pipeline stage then we load the instruction to an array list named a to divide it part by part and take from it the opcode, rs, rt, funct, and the rest of the instruction.
 Then according to the opcode, we determine it’s type whether it’s R-type, I-Type, or J-type.
 For example, if it’s R-type first we get the type of the registers used in the instruction by passing the registers to a method called getType that returns the type of the register used. After that, we need to make sure that the Rd register is not Zero Register as we can’t modify it or write into it. if it’s not then we specify in the decode the instruction format of each of the opcode, the rs, the rt, and the funct.
@@ -71,19 +71,17 @@ They’re one-bit signals except for the ALUOp which is 2 bits.
 So according to the opcode of each instruction, we decide whether to set each of these instructions to 1 or 0. After that, we call the method called ALUControl that decides the 4-bit operation code for each instruction according to the ALUop and funct.
 
 
-
-
-
-
-Execute :
+## Execute :
 In Execute stage we first check the type of the instruction whether it’s R-type, J-type or I-type according to its ALUop signal and also the opcode for example if the instruction is of I-type format and the ALUop is “00” then we know that it could be lw/sw or addi so the opcode indicates the type of the instruction and when we know the type of instruction in case of I-type we save it to ArrayList in order to access it in the pipelining and send it to the next stage.
 If ALUop is “01” then we know that the instruction is of type Branch so we check the branching condition according to the instruction we have and if it satisfies the branching condition then we compute the branch address.
 If it doesn’t meet the conditions then we increment pc to point to the next instruction.
 If the instruction is of R-type then we compute the result using the ALU class in package components and save to ArrayList to pass it to the next pipeline stage with its signals and registers used.
 
-MemoryAccess: in memory access first we check the values of MemRead and MemWrite flags to know whether they’re set on/off and according to the flags we decide whether to read or write.
+## MemoryAccess:
+in memory access first we check the values of MemRead and MemWrite flags to know whether they’re set on/off and according to the flags we decide whether to read or write.
 In case of sw, we write into cache the data we’ve got it from the instruction.
 In the case of lw, we read the data from the cache and store it in ArrayList to pass it to the next pipeline stage.
 
-WriteBack: in writeBack stage first we check RegWrite whether it’s on or off and if it’s on then we check first MemToReg flag whether it’s on or off and if it’s on then its lw and we get data from memory and write it to the register in the register file.
+## WriteBack: 
+in writeBack stage first we check RegWrite whether it’s on or off and if it’s on then we check first MemToReg flag whether it’s on or off and if it’s on then its lw and we get data from memory and write it to the register in the register file.
 Else then if RegDst is on we write the data in the rd register in the register file.
