@@ -8,6 +8,7 @@ First of all, for the micro-architecture, we have chosen the Von Neumann archite
 
 Secondly, we chose the size of the instruction memory and data memory. For each of the two memories the following memory size was picked (1024 x 16-bit ). The total number of registers used were 16 Registers.
 As for the Instruction Format, we used Instruction set 1, which contained the following Instructions :
+![Annotation 2020-05-14 215243](https://user-images.githubusercontent.com/47950134/85267811-fe5e7d00-b475-11ea-9636-f419099a4cdc.png)
 
 ## Arithmetic Instructions: 
 1. Add. 2. Add immediate. 3. Sub. 4. Multiply.
