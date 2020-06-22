@@ -1,4 +1,4 @@
-# Microcontroller Architecture
+# Microcontroller Architecture :muscle:	
 Simulation of our Microcontroller Architecture with pipelining in java.
 
 First of all, for the micro-architecture, we have chosen the Von Neumann architecture which has the following properties :
